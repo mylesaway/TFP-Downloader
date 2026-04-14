@@ -442,6 +442,7 @@ def download():
 
     output_template = str(out_dir / "%(title).60s [%(id)s].%(ext)s")
 
+    cookies_path = Path(__file__).parent / "cookies.txt"
     cmd = [
         "yt-dlp",
         "--format",
@@ -451,8 +452,10 @@ def download():
         "--output", output_template,
         "--no-playlist",
         "--quiet",
-        url,
     ]
+    if cookies_path.exists():
+        cmd += ["--cookies", str(cookies_path)]
+    cmd.append(url)
 
     result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
 
